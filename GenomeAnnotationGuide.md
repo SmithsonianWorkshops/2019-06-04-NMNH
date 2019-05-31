@@ -5,10 +5,14 @@
  * [2. Folder structure](#2-folder-structure)
  * [3. Get the assembly stats with assembly-stats](#3-Get-the-assembly-stats-with-assembly-stats)
  * [4. Filter out small scaffolds](#4-Filter-out-small-scaffolds)
- * [5. Run BUSCO using the --long flag](#5-Run-BUSCO-using-the---long-flag)
- * [6. Run RepeatMasker](#6-Run-RepeatMasker)
- * [7. Run BLAT](#7-Run-BLAT)
+ * [5. Run RepeatMasker](#5-Run-RepeatMasker)
+ * [6. Run BLAT](#6-Run-BLAT)
+ * [7. Run BUSCO using the --long flag](#7-Run-BUSCO-using-the---long-flag)
+ 	* [7a. Using BUSCO output for the AUGUSTUS run](#7a-Using-BUSCO-output-for-the-AUGUSTUS-run)
  * [8. Create Augustus hints](#8-Create-Augustus-hints)
+ 	* [Creating hint files from RepeatMasker](#Creating-hint-files-from-RepeatMasker)
+	* [Creating hint files from BLAT](#Creating-hint-files-from-BLAT)
+	* [Merging hints files](#Merging-hints-files)
  * [9. Edit the extrinsic file to add only the evidence you have](#9-Edit-the-extrinsic-file-to-add-only-the-evidence-you-have)
  * [10. A brief introduction to LOOPS](#10-A-brief-introduction-to-LOOPS)
  * [11. Run AUGUSTUS](#11-Run-AUGUSTUS)
@@ -18,7 +22,7 @@
 
 ## DAY 1
 
-### Quick Unix tutorial
+### 1. Quick Unix tutorial
 For this workshop, we will need to know some UNIX commands. You might be familiar with them, but let's just do a quick refresher so we are all on the same page. If you have additional questions about a command and its options, you can use `man` to access the manual. Try the command `man ls` to access the manual for the list command. 
 
 - To figure out where you are: `pwd`. This command will print the full path of your current directory.
@@ -211,8 +215,99 @@ bioawk -c fastx '{ if(length($seq) > 499) { print ">"$name; print $seq }}' input
 **Observation**: this bioawk command will remove any scaffolds of the specified size an below. Since I want to keep the 500bp scaffolds, I used 499 instead of 500.  
   
 
+### 5. Masking and annotating repetitive elements
 
-### 5. Run BUSCO using the --long flag
+From the RepeatMasker manual (Smit, 2013-2015):
+> Repeatmasker is a program that screens DNA sequences for interspersed repeats and low complexity DNA sequences.The output of the program is a detailed annotation of the repeats that are present in the query sequence as well as a modified version of the query sequence in which all the annotated repeats have been masked. 
+
+**Important**: `cd` to the `repeatmasker` folder before submitting the job.
+
+We will create a link to our assembly `Dhydei_genome.fa` in the `repeatmasker` folder. Here's the command:
+
+`ln -s ../assembly/Dhydei_genome.fa .`
+
+If you `ls -l` in the `repeatmasker` folder, you should see something like this:
+
+```
+total 0
+lrwxrwxrwx 1 tsuchiyam tsuchiyam 28 May 31 09:19 Dhydei_genome.fa -> ../assembly/Dhydei_genome.fa
+```
+
+#### Job file: repeatmasker.job
+- Queue: medium
+- PE: multi-thread
+- Number of CPUs: 10
+- Memory: 4G
+- Module: `module load bioinformatics/repeatmasker`
+- Commands:
+
+```
+RepeatMasker -species drosophila -pa $NSLOTS -xsmall -dir . Dhydei_genome.fa
+
+```
+##### Explanation:
+```
+-species: species/taxonomic group repbase database (browse available species here: 
+ https://www.girinst.org/repbase/update/browse.php)
+-pa: number of cpus
+-xsmall: softmasking (instead of hardmasking with N)
+-dir: writes the output to the current directory
+
+```
+
+##### Output files:
+- Dhydei_genome.fa.tbl: summary information about the repetitive elements
+- Dhydei_genome.fa.masked: hardmasked assembly
+- Dhydei_genome.fa.softmasked: softmasked assembly
+- Dhydei_genome.fa.out: detailed information about the repetitive elements, including coordinates, repeat type and size.
+
+##### About the species:
+- You can use the script `queryTaxonomyDatabase.pl` from the RepeatMasker module to search for your species of interest. 
+
+	`queryTaxonomyDatabase.pl -species cat`
+
+
+### 6. Run BLAT
+
+BLAT (BLAST-like Alignment Tool, Kent 2002) is a tool that aligns DNA (as well as 6-frame translated DNA or proteins) to DNA, RNA and proteins across different species. The output of this program will also be used as hints for AUGUSTUS.
+
+Since we don't have a transcriptome for this species, we will use one from *Drosophila melanogaster*. Link [here](ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/215/GCF_000001215.4_Release_6_plus_ISO1_MT/GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz)
+
+<details><summary>HINT</summary>
+<p>
+
+**HINT**: Use `wget` to download the file to the `blat` folder.
+`wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/215/GCF_000001215.4_Release_6_plus_ISO1_MT/GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz`
+
+</p>
+</details>
+
+
+Also, extract the file using gunzip: 
+
+`gunzip GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz`
+
+#### Job file: blat.job
+- Queue: medium
+- PE: serial
+- Memory: 2G
+- Module: `module load bioinformatics/blat`
+- Commands:
+
+```
+blat -t=dna -q=rna ../assembly/Dhydei_genome.fa \
+GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna \
+Dhydei_blat.psl
+```
+
+##### Explanation:
+```
+-t: target database type (DNA, 6-frame translated DNA or protein)
+-q: query database type (DNA, RNA, protein, 6-frame translated DNA or RNA).
+
+```
+
+### 7. Run BUSCO using the --long flag
 
 BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](). Let's `cd` to the directory `busco`
 
@@ -267,7 +362,7 @@ run_BUSCO.py --long -o Dhydei -i ../assembly/Dhydei_genome.fa -l diptera_odb9 -c
 ```
 
 
-##### 5a. Using BUSCO output for the AUGUSTUS run (MUST UPDATE THE NAMES)
+##### 7a. Using BUSCO output for the AUGUSTUS run
 Copy the folder `run_Dhydei/augustus_output/retraining_parameters` to your folder `augustus/config/species`. Rename the folder with the name of the run (you can find it by looking at the file prefix inside the folder). In this case, we will rename the folder `BUSCO_Dhydei_2188842729`
 
 ```
@@ -328,101 +423,7 @@ In this case, these are the steps we would follow:
 </p>
 </details>
 
-
-### 7. Masking and annotating repetitive elements
-
-From the RepeatMasker manual (Smit, 2013-2015):
-> Repeatmasker is a program that screens DNA sequences for interspersed repeats and low complexity DNA sequences.The output of the program is a detailed annotation of the repeats that are present in the query sequence as well as a modified version of the query sequence in which all the annotated repeats have been masked. 
-
-**Important**: `cd` to the `repeatmasker` folder before submitting the job.
-
-We will create a link to our assembly `Dhydei_genome.fa` in the `repeatmasker` folder. Here's the command:
-
-`ln -s ../assembly/Dhydei_genome.fa .`
-
-If you `ls -l` in the `repeatmasker` folder, you should see something like this:
-
-```
-total 0
-lrwxrwxrwx 1 tsuchiyam tsuchiyam 28 May 31 09:19 Dhydei_genome.fa -> ../assembly/Dhydei_genome.fa
-```
-
-#### Job file: repeatmasker.job
-- Queue: medium
-- PE: multi-thread
-- Number of CPUs: 10
-- Memory: 4G
-- Module: `module load bioinformatics/repeatmasker`
-- Commands:
-
-```
-RepeatMasker -species drosophila -pa $NSLOTS -xsmall -dir . Dhydei_genome.fa
-
-```
-##### Explanation:
-```
--species: species/taxonomic group repbase database (browse available species here: 
- https://www.girinst.org/repbase/update/browse.php)
--pa: number of cpus
--xsmall: softmasking (instead of hardmasking with N)
--dir: writes the output to the current directory
-
-```
-
-##### Output files:
-- Dhydei_genome.fa.tbl: summary information about the repetitive elements
-- Dhydei_genome.fa.masked: hardmasked assembly
-- Dhydei_genome.fa.softmasked: softmasked assembly
-- Dhydei_genome.fa.out: detailed information about the repetitive elements, including coordinates, repeat type and size.
-
-##### About the species:
-- You can use the script `queryTaxonomyDatabase.pl` from the RepeatMasker module to search for your species of interest. 
-
-	`queryTaxonomyDatabase.pl -species cat`
-
-
-### 7. Run BLAT
-
-BLAT (BLAST-like Alignment Tool, Kent 2002) is a tool that aligns DNA (as well as 6-frame translated DNA or proteins) to DNA, RNA and proteins across different species. The output of this program will also be used as hints for AUGUSTUS.
-
-Since we don't have a transcriptome for this species, we will use one from *Drosophila melanogaster*. Link [here](ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/215/GCF_000001215.4_Release_6_plus_ISO1_MT/GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz)
-
-<details><summary>HINT</summary>
-<p>
-
-**HINT**: Use `wget` to download the file to the `blat` folder.
-`wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/215/GCF_000001215.4_Release_6_plus_ISO1_MT/GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz`
-
-</p>
-</details>
-
-
-Also, extract the file using gunzip: 
-
-`gunzip GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna.gz`
-
-#### Job file: blat.job
-- Queue: medium
-- PE: serial
-- Memory: 2G
-- Module: `module load bioinformatics/blat`
-- Commands:
-
-```
-blat -t=dna -q=rna ../assembly/Dhydei_genome.fa \
-GCF_000001215.4_Release_6_plus_ISO1_MT_rna.fna \
-Dhydei_blat.psl
-```
-
-##### Explanation:
-```
--t: target database type (DNA, 6-frame translated DNA or protein)
--q: query database type (DNA, RNA, protein, 6-frame translated DNA or RNA).
-
-```
-
-
-## DAY 2 (maybe)
+## DAY 2
 
 Now we will integrate the information from the previous jobs into our AUGUSTUS job. To do that, we first need to create hint files from both RepeatMasker and BLAT. We will run the commands from this step using the **interative** queue (`qrsh`)
 
@@ -439,7 +440,7 @@ For the sake of keeping things organized, let's create three folders inside your
  
 ### 8. Create Augustus hints
 
-#### Creating hints files from RepeatMasker
+#### Creating hint files from RepeatMasker
 In this step, we will use the .out file from the RepeatMasker use it to create a hint file for AUGUSTUS. 
 
 - **Use the script `rmOutToGFF3.pl` to convert your .out file into GFF3**
@@ -473,7 +474,7 @@ This script can be found here: [http://iubio.bio.indiana.edu/gmod/genogrid/scrip
 	`perl gff2hints.pl --in=hints/Dhydei_RM.gff3 --source=RM --out=hints/Dhydei_RM_hints.out`
 
 
-#### Creating hints files from BLAT
+#### Creating hint files from BLAT
 In this step, we will use the .psl file from the BLAT run to create a hint file for AUGUSTUS.
 
 - **Sort the .psl file**
@@ -486,7 +487,7 @@ In this step, we will use the .psl file from the BLAT run to create a hint file 
 	blat2hints.pl --in=hints/Dhydei_blat_srt.psl --out=hints/Dhydei_blat_hints.out
 	```
 
-#### Merging the hints files:
+#### Merging hints files
 
 To merge the hints files from RepeatMasker and BLAT, use the following command: 
 
@@ -614,6 +615,7 @@ and add the word backup in from of it. What are the options?
 **Why is it important?**
 
 For loops are very useful when you have multiple files to process. We will use a for loop to submit our augustus jobs. 
+
 
 ### 11.AUGUSTUS
 
