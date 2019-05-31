@@ -742,6 +742,14 @@ Use the script `join_aug_pred.pl` from AUGUSTUS (use the interactive queue `qrsh
 
 Now that we have an annotated genome, we can visualize the assembly and annotations using a genome browser. Today we will show you how to setup a genome browser using JBrowse, and those same files can be used with WebApollo for manual annotation.
 
+We will use the jbrowse module on the interactive queue. 
+
+
+	qrsh
+	cd /pool/genomics/username/GAworkshop/jbrowse
+	module load bioinformatics/jbrowse/1.0
+
+
 1. **prepare-refseqs.pl**: formats the reference sequence to be used with JBrowse
 	
 	```
