@@ -1,6 +1,6 @@
 
 ## Summary of steps:
- <!--ts-->
+<!-- TOC depthFrom:2 -->
  * [1. Quick Unix tutorial](#1-quick-unix-tutorial)  
  * [2. Folder structure](#2-folder-structure)
  * [3. Get the assembly stats with assembly-stats](#3-Get-the-assembly-stats-with-assembly-stats)
@@ -13,7 +13,8 @@
  * [10. A brief introduction to LOOPS](#10-A-brief-introduction-to-LOOPS)
  * [11. Run AUGUSTUS](#11-Run-AUGUSTUS)
  * [12. Create a genome browser with JBrowse](#12-Create-a-genome-browser-with-JBrowse)
-<!--te-->
+
+<!-- /TOC -->
 
 ## DAY 1
 
