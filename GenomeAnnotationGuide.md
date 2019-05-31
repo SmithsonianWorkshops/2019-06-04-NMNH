@@ -19,8 +19,7 @@
 
 ## Summary of steps:
  <!--ts-->
-   * [gh-md-toc](#gh-md-toc)
-   * 1. [Quick Unix tutorial](#quick-unix-tutorial)
+   * 1. [Quick Unix tutorial](#quick-unix-tutorial)  
 	2. Folder structure
 	3. Get the assembly stats with assembly-stats
 	4. Filter out small scaffolds
@@ -36,7 +35,7 @@
 
 ## DAY 1
 
-### Quick Unix tutorial
+### 1. Quick Unix tutorial
 For this workshop, we will need to know some UNIX commands. You might be familiar with them, but let's just do a quick refresher so we are all on the same page. If you have additional questions about a command and its options, you can use `man` to access the manual. Try the command `man ls` to access the manual for the list command. 
 
 - To figure out where you are: `pwd`. This command will print the full path of your current directory.
