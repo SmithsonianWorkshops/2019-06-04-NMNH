@@ -1,21 +1,42 @@
-## Summary of steps:
-1. [Quick Unix/Shell tutorial](###%201.%20Quick%20Unix/Shell%20tutorial)
-2. Folder structure
-3. Get the assembly stats with assembly-stats
-4. Filter out small scaffolds
-5. Run BUSCO using the --long flag
-6. Run RepeatMasker
-7. Run BLAT
-8. Create Augustus hints 
-9. Edit the extrinsic file to add only the evidence you have
-10. A brief introduction to LOOPS
-11. Run AUGUSTUS
-12. Create a genome browser with JBrowse
+<!--ts-->
+   * [gh-md-toc](#gh-md-toc)
+   * [Table of contents](#table-of-contents)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [STDIN](#stdin)
+      * [Local files](#local-files)
+      * [Remote files](#remote-files)
+      * [Multiple files](#multiple-files)
+      * [Combo](#combo)
+      * [Auto insert and update TOC](#auto-insert-and-update-toc)
+      * [GitHub token](#github-token)
+   * [Tests](#tests)
+   * [Dependency](#dependency)
+<!--te-->
 
+
+
+
+## Summary of steps:
+ <!--ts-->
+   * [gh-md-toc](#gh-md-toc)
+   * 1. [Quick Unix/Shell tutorial](Quick-Unix/Shell-tutorial)
+	2. Folder structure
+	3. Get the assembly stats with assembly-stats
+	4. Filter out small scaffolds
+	5. Run BUSCO using the --long flag
+	6. Run RepeatMasker
+	7. Run BLAT
+	8. Create Augustus hints 
+	9. Edit the extrinsic file to add only the evidence you have
+	10. A brief introduction to LOOPS
+	11. Run AUGUSTUS
+	12. Create a genome browser with JBrowse
+<!--te-->
 
 ## DAY 1
 
-### 1. Quick Unix/Shell tutorial
+### Quick Unix/Shell tutorial
 For this workshop, we will need to know some UNIX commands. You might be familiar with them, but let's just do a quick refresher so we are all on the same page. If you have additional questions about a command and its options, you can use `man` to access the manual. Try the command `man ls` to access the manual for the list command. 
 
 - To figure out where you are: `pwd`. This command will print the full path of your current directory.
