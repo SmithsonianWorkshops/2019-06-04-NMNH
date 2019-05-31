@@ -1,5 +1,5 @@
 ## Summary of steps:
-1. Quick Unix/Shell tutorial
+1. [Quick Unix/Shell tutorial](###%201.%20Quick%20Unix/Shell%20tutorial)
 2. Folder structure
 3. Get the assembly stats with assembly-stats
 4. Filter out small scaffolds
