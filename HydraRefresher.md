@@ -272,15 +272,36 @@ Now, go to [https://icytree.org/](https://icytree.org/) in a web browser, and op
 
 ## Interactive queue
 
+Hydra has another way of running jobs on the compute nodes, without using the job scheduler. Let's try to run the exact same iqtree command using this technique.
+
+First, you need to use the `qrsh` command to enter this environment. The main parameter to know is how many threads you will be using.
+
 ```console
 $ qrsh -pe mthread 2
 ```
+
+An important point to note with the interactive queue is that is always places you back in your `/home` directory, which can be confusing.
 
 ```console
 $ pwd
 /home/{user}
 ```
 
+So let's go back to our "hydra_workshop" directory.
+
 ```console
 $ cd /pool/genomics/{}/hydra_workshop
 ```
+
+And now we can directly run the same commands that we listed out in our job file.
+
+```console
+module load bioinformatics/iqtree
+```
+
+And then the same iqtree command -- but changing the data paths, since we're in the main project directory now.
+
+```console
+iqtree -s data/raw/primates.dna.phy -nt $NSLOTS -pre data/results/primates.dna
+```
+
