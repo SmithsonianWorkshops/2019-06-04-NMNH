@@ -257,8 +257,7 @@ RepeatMasker -species drosophila -pa $NSLOTS -xsmall -dir . Dhydei_genome.fa
 
 ##### Output files:
 - Dhydei_genome.fa.tbl: summary information about the repetitive elements
-- Dhydei_genome.fa.masked: hardmasked assembly
-- Dhydei_genome.fa.softmasked: softmasked assembly
+- Dhydei_genome.fa.masked: masked assembly (in our case, softmasked)
 - Dhydei_genome.fa.out: detailed information about the repetitive elements, including coordinates, repeat type and size.
 
 ##### About the species:
@@ -451,7 +450,7 @@ In this step, we will use the .out file from the RepeatMasker use it to create a
 	```
 
 - **Use the script `gff2hints.pl` convert the gff3 into a hints file**
-This script can be found here: [http://iubio.bio.indiana.edu/gmod/genogrid/scripts/gff2hints.pl]()
+This script can be found here: [http://arthropods.eugenes.org/genes2/evigene/scripts/gff2hints.pl]()
 
 
 	<details><summary>HINT</summary>
@@ -459,7 +458,7 @@ This script can be found here: [http://iubio.bio.indiana.edu/gmod/genogrid/scrip
 	
 	---
 	**Use `wget` to download it.**
-	```wget http://iubio.bio.indiana.edu/gmod/genogrid/scripts/gff2hints.pl```
+	```wget http://arthropods.eugenes.org/genes2/evigene/scripts/gff2hints.pl```
 	
 	---
 	
@@ -688,8 +687,8 @@ Now, let's create our augustus job file.
 	--gff3=on \
 	--uniqueGeneId=true \
 	--softmasking=1 \
-	--species= BUSCO_Dhydei_2188842729 \
-	${1}/Dhydei_genome.fa.softmasked > ../output/Dhydei_augustus_${1}.gff
+	--species=BUSCO_Dhydei_2188842729 \
+	${1}/Dhydei_genome.fa.masked > ../output/Dhydei_augustus_${1}.gff
 	#
 	echo = `date` job $JOB_NAME done
 	#
