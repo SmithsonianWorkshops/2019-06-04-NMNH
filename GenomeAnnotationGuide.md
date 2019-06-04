@@ -20,7 +20,7 @@
 
 <!-- /TOC -->
 
-## DAY 1
+## DAY 1: morning
 
 ### 1. Quick Unix tutorial
 For this workshop, we will need to know some UNIX commands. You might be familiar with them, but let's just do a quick refresher so we are all on the same page. If you have additional questions about a command and its options, you can use `man` to access the manual. Try the command `man ls` to access the manual for the list command. 
@@ -425,7 +425,7 @@ Dhydei_blat.psl
 ```
 
 
-## DAY 2
+## DAY 1: afternoon
 
 Now we will integrate the information from the previous jobs into our AUGUSTUS job. To do that, we first need to create hint files from both RepeatMasker and BLAT. We will run the commands from this step using the **interative** queue (`qrsh`)
 
@@ -574,6 +574,7 @@ nonexonpart      1          1  M    1  1e+100  RM  1     1.15 E 1    1
 </p>
 </details>
 
+## DAY 2
 
 ### 10. A brief introduction to LOOPS
 
