@@ -453,7 +453,7 @@ In this step, we will use the .out file from the RepeatMasker use it to create a
 	```
 
 - **Use the script `gff2hints.pl` convert the gff3 into a hints file**
-This script can be found here: [http://arthropods.eugenes.org/genes2/evigene/scripts/gff2hints.pl]()
+This script can be found here: [http://arthropods.eugenes.org/genes2/evigene/scripts/gff2hints.pl](http://arthropods.eugenes.org/genes2/evigene/scripts/gff2hints.pl)
 
 
 	<details><summary>HINT</summary>
@@ -637,7 +637,7 @@ AUGUSTUS will run serially, one scaffold at a time. In order to speed up the pro
 
 EVM (EVidence Modeller, Haas et al. 2008) is a program that combines *ab initio* gene predictions and protein and transcript alignments into weighted consensus gene structures. We will use an EVM script that splits the assembly into folders, with one scaffold per folder plus its corresponding hints file (in gff).
 
-We don't have EVM installed as a module on Hydra, but you can download ([https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz]()) and extract it in your `augustus` folder. The script is in the folder EVmutils. This script runs fast, so we can continue on the interactive queue to run it. 
+We don't have EVM installed as a module on Hydra, but you can download ([https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz](https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz)) and extract it in your `augustus` folder. The script is in the folder EVmutils. This script runs fast, so we can continue on the interactive queue to run it. 
 
 <details><summary>HINT</summary>
 <p>
