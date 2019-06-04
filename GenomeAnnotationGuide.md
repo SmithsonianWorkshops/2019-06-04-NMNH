@@ -310,17 +310,7 @@ Dhydei_blat.psl
 
 BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](). Let's `cd` to the directory `busco`
 
-**Database:**
-
-For this workshop, we will use the Diptera database. Download it to the folder `02busco` using the command `wget` and extract it.
-
-	wget https://buscos.ezlab.org/datasets/diptera_odb9.tar.gz
-	tar -zxf diptera_odb9.tar.gz
-
-
-According to the BUSCO manual, the `--long` flag turns on Augustus optimization mode for self-training. It can be used as a training set for AUGUSTUS.
-
-
+---
 ##### *** Before running BUSCO, copy the file augustus/config folder to a place where you have writing privileges***
 The AUGUSTUS config folder can be found here:  `/share/apps/bioinformatics/augustus/gcc/4.9.2/3.3/config/`. Copy it to the folder `augustus` inside your `GAworkshop` folder.
 
@@ -333,6 +323,17 @@ Assuming you are in the folder GAworkshop:
 </p>
 </details>
 
+---
+
+**Database:**
+
+For this workshop, we will use the Diptera database. Download it to the folder `02busco` using the command `wget` and extract it.
+
+	wget https://buscos.ezlab.org/datasets/diptera_odb9.tar.gz
+	tar -zxf diptera_odb9.tar.gz
+
+
+According to the BUSCO manual, the `--long` flag turns on Augustus optimization mode for self-training. It can be used as a training set for AUGUSTUS.
 
 
 #### Job file: busco.job
