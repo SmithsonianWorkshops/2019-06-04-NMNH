@@ -108,7 +108,7 @@ For this workshop, we will use the genome assembly of *Drosophila hydei*, which 
 <details><summary>SOLUTION</summary>
 <p>
 
-`cp /data/workshops/GAworkshop/Dhydei_genome.fa ./assembly/`
+`cp /data/genomics/workshops/GAworkshop/Dhydei_genome.fa ./assembly/`
 
 </p>
 </details>
