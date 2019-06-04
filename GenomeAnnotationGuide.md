@@ -236,7 +236,7 @@ lrwxrwxrwx 1 tsuchiyam tsuchiyam 28 May 31 09:19 Dhydei_genome.fa -> ../assembly
 #### Job file: repeatmasker.job
 - Queue: medium
 - PE: multi-thread
-- Number of CPUs: 10
+- Number of CPUs: 10-24
 - Memory: 4G
 - Module: `module load bioinformatics/repeatmasker`
 - Commands:
@@ -251,7 +251,7 @@ RepeatMasker -species drosophila -pa $NSLOTS -xsmall -dir . Dhydei_genome.fa
  https://www.girinst.org/repbase/update/browse.php)
 -pa: number of cpus
 -xsmall: softmasking (instead of hardmasking with N)
--dir: writes the output to the current directory
+-dir .: writes the output to the current directory
 
 ```
 
