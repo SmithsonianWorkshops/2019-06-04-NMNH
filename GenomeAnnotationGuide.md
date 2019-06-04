@@ -103,7 +103,7 @@ If we follow this folder structure, we will have all jobs in the same folder, as
 
 ### 3. Get the assembly stats with `assembly-stats`
 
-For this workshop, we will use the genome assembly of *Drosophila hydei*, which size is 147 Mb. You can copy the assembly file from `/data/workshops/GAworkshop/Dhydei_genome.fa` (FOR NOW, THE FILE IS IN `/scratch/genomics/tsuchiyam/workshops/GAworkshop/assembly/Dhydei_genome.fa`). You should copy it to your `assembly` folder.
+For this workshop, we will use the genome assembly of *Drosophila hydei*, which size is 147 Mb. You can copy the assembly file from `/data/workshops/GAworkshop/Dhydei_genome.fa`. You should copy it to your `assembly` folder.
 
 <details><summary>SOLUTION</summary>
 <p>
