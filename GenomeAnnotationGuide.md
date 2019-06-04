@@ -500,9 +500,9 @@ To merge the hints files from RepeatMasker and BLAT, use the following command:
 
 The AUGUSTUS extrinsic file has the information about the sources of evidence that will be used. In our case, we have evidence about repetitive elements (from RepeatMasker) and transcriptome (from BLAT). 
 
-We have created a custom extrinsic file with those two sources of evidence. Copy it from `/data/workshops/GAworkshop/extrinsic.M.RM.E.cfg` to YOUR augustus/config/extrinsic folder. Like this:
+We have created a custom extrinsic file with those two sources of evidence. Copy it from `/data/genomics/workshops/GAworkshop/extrinsic.M.RM.E.cfg` to YOUR augustus/config/extrinsic folder. Like this:
 
-`cp /data/workshops/GAworkshop/extrinsic.M.RM.E.cfg config/extrinsic`
+`cp /data/genomics/workshops/GAworkshop/extrinsic.M.RM.E.cfg config/extrinsic`
 
 
 <details><summary>EXAMPLE</summary>
