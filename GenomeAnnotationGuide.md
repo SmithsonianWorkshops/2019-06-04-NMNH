@@ -308,7 +308,7 @@ Dhydei_blat.psl
 
 ### 7. Run BUSCO using the --long flag
 
-BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](). Let's `cd` to the directory `busco`
+BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](). 
 
 ---
 ##### *** Before running BUSCO, copy the file augustus/config folder to a place where you have writing privileges***
@@ -327,7 +327,7 @@ Assuming you are in the folder GAworkshop:
 
 **Database:**
 
-For this workshop, we will use the Diptera database. Download it to the folder `02busco` using the command `wget` and extract it.
+For this workshop, we will use the Diptera database. Download it to the folder `busco` using the command `wget` and extract it. Let's `cd` to the directory `busco` first.
 
 	wget https://buscos.ezlab.org/datasets/diptera_odb9.tar.gz
 	tar -zxf diptera_odb9.tar.gz
@@ -491,7 +491,7 @@ In this step, we will use the .psl file from the BLAT run to create a hint file 
 
 To merge the hints files from RepeatMasker and BLAT, use the following command: 
 
-`cat Dhydei_RM_hints.out Dhydei_blat_hints.out | sort -n -k 4,4 | sort -n -k 5,5 > Dhydei_hints_RM_E.gff3`
+`cat Dhydei_RM_hints.out Dhydei_blat_hints.out | sort -k1,1 -k4,4n > Dhydei_hints_RM_E.gff3`
 
 
 ### 9. Augustus extrinsic file
