@@ -217,7 +217,7 @@ bioawk -c fastx '{ if(length($seq) > 499) { print ">"$name; print $seq }}' input
 
 ### 5. Run BUSCO using the --long flag
 
-BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](). 
+BUSCO (Simão et al. 2015; Waterhouse et al. 2017) assesses completeness by searching the genome for a selected set of single copy orthologous genes. There are several databases that can be used with BUSCO and they can be downloaded from here: [https://buscos.ezlab.org](https://buscos.ezlab.org). 
 
 ---
 ##### *** Before running BUSCO, copy the file augustus/config folder to a place where you have writing privileges***
