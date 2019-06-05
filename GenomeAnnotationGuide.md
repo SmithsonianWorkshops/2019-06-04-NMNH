@@ -14,9 +14,9 @@
 	* [Creating hint files from BLAT](#Creating-hint-files-from-BLAT)
 	* [Merging hints files](#Merging-hints-files)
  * [9. Edit the extrinsic file to add only the evidence you have](#9-Edit-the-extrinsic-file-to-add-only-the-evidence-you-have)
- * [10. A brief introduction to LOOPS](#10-A-brief-introduction-to-LOOPS)
- * [11. Run AUGUSTUS](#11-Run-AUGUSTUS)
- * [12. Create a genome browser with JBrowse](#12-Create-a-genome-browser-with-JBrowse)
+ * [10. Run AUGUSTUS](#10-Run-AUGUSTUS)
+ 	* [10a. A brief introduction to LOOPS](#10a-A-brief-introduction-to-LOOPS)
+ * [11. Create a genome browser with JBrowse](#12-Create-a-genome-browser-with-JBrowse)
 
 <!-- /TOC -->
 
@@ -576,7 +576,75 @@ nonexonpart      1          1  M    1  1e+100  RM  1     1.15 E 1    1
 
 ## DAY 2
 
-### 10. A brief introduction to LOOPS
+### 10.AUGUSTUS
+
+
+For the AUGUSTUS job, we need the following input files:
+
+1. assembly (masked)
+2. merged RM and E hints file
+3. extrinsic file
+4. retraining parameters (from BUSCO)
+
+
+AUGUSTUS will run serially, one scaffold at a time. In order to speed up the process, we can break the assembly into scaffolds and process them in paralel. To do so, we will use a script from EVM (EVidenceModeller) to split the assembly and the hints file, and create job arrays for AUGUSTUS.
+
+
+<details><summary>Masked Assembly</summary>
+	<p>
+	
+	---
+	**Copy the masked assembly:**  
+	```
+	cp /data/genomics/workshops/GAworkshop/repeatmasker/Dhydei_genome.fa.masked
+	```
+	
+	---
+	
+	
+	</p>
+	</details>
+
+**Partition the assembly into scaffolds** 
+
+EVM (EVidence Modeller, Haas et al. 2008) is a program that combines *ab initio* gene predictions and protein and transcript alignments into weighted consensus gene structures. We will use an EVM script that splits the assembly into folders, with one scaffold per folder plus its corresponding hints file (in gff).
+
+We don't have EVM installed as a module on Hydra, but you can download ([https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz](https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz)) and extract it in your `augustus` folder. The script is in the folder EVmutils. This script runs fast, so we will use the interactive queue to run it. 
+
+<details><summary>HINT</summary>
+<p>
+
+---
+
+**From your `augustus` folder**  
+
+```
+wget https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz
+tar -zxf v1.1.1.tar.gz
+
+```
+---
+
+
+</p>
+</details>
+
+
+Now `cd` to `scaffolds` and run the following command from it:
+
+```
+module load bioinformatics/bioperl
+
+perl ../EVidenceModeler-1.1.1/EvmUtils/partition_EVM_inputs.pl --genome ../../repeatmasker/Dhydei_genome.fa.softmasked \
+     --gene_predictions ../hints/Dhydei_hints_RM_E.gff3 \
+     --segmentSize 1000000 --overlapSize 300000 \
+     --partition_listing partitions_list.out
+```
+
+Now you should have many (217 to be exact) folders, each one with one scaffold and its corresponding hints file. They all retained the same name or the original file, and the folders are identified as `scaffold_1`, `scaffold_2`... `scaffold_217`.
+
+
+### 10a. A brief introduction to LOOPS
 
 We will take a "break" from this pipeline to talk about loops. 
 Loops allow you to execute repetitive tasks multiple times with a single command. For example:
@@ -620,64 +688,12 @@ and add the word backup in from of it. What are the options?
 For loops are very useful when you have multiple files to process. We will use a for loop to submit our augustus jobs. 
 
 
-### 11.AUGUSTUS
-
-
-For the AUGUSTUS job, we need the following input files:
-
-1. assembly (masked)
-2. merged RM and E hints file
-3. extrinsic file
-4. retraining parameters (from BUSCO)
-
-
-AUGUSTUS will run serially, one scaffold at a time. In order to speed up the process, we can break the assembly into scaffolds and process them in paralel. To do so, we will use a script from EVM (EVidenceModeller) to split the assembly and the hints file, and create job arrays for AUGUSTUS.
-
-**Partition the assembly into scaffolds** 
-
-EVM (EVidence Modeller, Haas et al. 2008) is a program that combines *ab initio* gene predictions and protein and transcript alignments into weighted consensus gene structures. We will use an EVM script that splits the assembly into folders, with one scaffold per folder plus its corresponding hints file (in gff).
-
-We don't have EVM installed as a module on Hydra, but you can download ([https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz](https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz)) and extract it in your `augustus` folder. The script is in the folder EVmutils. This script runs fast, so we can continue on the interactive queue to run it. 
-
-<details><summary>HINT</summary>
-<p>
-
----
-
-**From your `augustus` folder**  
-
-```
-wget https://github.com/EVidenceModeler/EVidenceModeler/archive/v1.1.1.tar.gz
-tar -zxf v1.1.1.tar.gz
-
-```
----
-
-
-</p>
-</details>
-
-
-Now `cd` to `scaffolds` and run the following command from it:
-
-```
-module load bioinformatics/bioperl
-
-perl ../EVidenceModeler-1.1.1/EvmUtils/partition_EVM_inputs.pl --genome ../../repeatmasker/Dhydei_genome.fa.softmasked \
-     --gene_predictions ../hints/Dhydei_hints_RM_E.gff3 \
-     --segmentSize 100000 --overlapSize 10000 \
-     --partition_listing partitions_list.out
-```
-
-Now you should have many (217 to be exact) folders, each one with one scaffold and its corresponding hints file. They all retained the same name or the original file, and the folders are identified as `scaffold_1`, `scaffold_2`... `scaffold_217`.
-
-
 Now, let's create our augustus job file.
 
 #### Job file: augustus.job
 - Queue: short
 - PE: serial
-- Memory: 20G
+- Memory: 2G
 - Module: `module load bioinformatics/augustus/3.3`
 - Commands:
 	
@@ -699,13 +715,12 @@ Now, let's create our augustus job file.
 ```
 
 Before we submit the job, let's exit from the interactive queue back to the login node by typing `exit`
-
 Now, let's make sure we are in the correct folder. We will submit this job from the folder `scaffolds` (the one that has all the 217 folders).
 
 To submit the job, use the following command (a for loop)
 
 ```
-for dir in scaffold-*/; do 
+for dir in scaffold_*/; do 
  out=${dir/\/}; qsub -N augustus_${out} -o ../../logs/augustus_${out}.log ../../jobs/augustus.job ${out};
 done
 ```
@@ -713,7 +728,7 @@ done
 
 ##### Understanding the commands:
 
-- `for dir in scaffold-*/;`: This loop will iterate over all folders that correspond to the pattern (in this case, name starts with scaffold-)
+- `for dir in scaffold_*/;`: This loop will iterate over all folders that correspond to the pattern (in this case, name starts with scaffold-)
 - `do out=${dir/\/};`: this command will create a new variable called `out` (you can give any name you want). This new variable will be based on the variable `$dir`, without the trailing slash "/".
 - `qsub -N test_${out} -o ../../logs/augustus_${out}.log ../../jobs/augustus.job ${out}`. Here we will finally submit the job, and some of the job parameters will be overwritten:
 	- `-N`: job name. We will give a name that includes the variable that contains the scaffold name.
@@ -733,13 +748,16 @@ Also, I'm saving all output files in a separate directory `output` to facilitate
 Use the script `join_aug_pred.pl` from AUGUSTUS (use the interactive queue `qrsh` and run the commands from the `output` folder).
 
 1. Concatenate all output files from augustus in numerical order:
-`cat $(find . name "Dhydei_augustus_*.gff" | sort -V) > Dhydei_augustus.concat`
+`cat $(find . -name "Dhydei_augustus_*.gff" | sort -V) > Dhydei_augustus.concat`
 
 2. Join the results using the `join_aug_pred.pl`
-`cat Dhydei_augustus.concat < join_aug_pred.pl > Dhydei_augustus_all.gff3`
+`cat Dhydei_augustus.concat < /share/apps/bioinformatics/augustus/gcc/4.9.2/3.3/scripts/join_aug_pred.pl >> Dhydei_augustus_all.gff3`
 
 3. Convert the Augustus GFF3 to EVM GFF3 (linear, without the sequences):
-`perl ../EVidenceModeler-1.1.1/EvmUtils/misc/augustus_GFF3_to_EVM_GFF3.pl augustus_all.gff3 > Dhydei_augustus_final.gff3 `
+`perl ../EVidenceModeler-1.1.1/EvmUtils/misc/augustus_GFF3_to_EVM_GFF3.pl Dhydei_augustus_all.gff3 > Dhydei_augustus_final.gff3 `
+
+4.(Optional) Remove empty lines from the final gff3
+`sed -i '/^$/d' Dhydei_augustus_final.gff3`
 
 ### 12. Create a genome browser with JBrowse
 
@@ -755,37 +773,35 @@ We will use the jbrowse module on the interactive queue.
 
 1. **prepare-refseqs.pl**: formats the reference sequence to be used with JBrowse
 	
-	```
-	prepare-refseqs.pl \  
-	--fasta ../assembly/Dhydei_genome.fa \
-	--out ./Dhydei
-	```
+```
+prepare-refseqs.pl \  
+--fasta ../assembly/Dhydei_genome.fa \
+--out ./Dhydei
+```
 	
-	Obs: fasta can be gzipped.  
+Obs: fasta can be gzipped.  
 	
 2. **flatfile-to-json.pl**: format data into JBrowse JSON format from an annotation file
 
-	```
-	flatfile-to-json.pl --gff ../augustus/output/Dhydei_augustus_final.gff3 \
-	--type CDS \
-	--tracklabel CDS \
-	--nameAttributes "name,alias,id,gene,product"
-	--out ./Dhydei
-	
-	```
+```
+flatfile-to-json.pl --gff ../augustus/output/Dhydei_augustus_final.gff3 \
+--type CDS \
+--tracklabel Augustus_CDS \
+--out ./Dhydei
+
+```
 
 	Observations:  
 	`--gff` can't be gzipped, and must be GFF3. In addition, this script will accept `--bed` and `--gbk` (genbank) files as input.  
-	`--type` is the 3rd column of the GFF file. Option are: cDNA\_match, CDS, exon, gene, guide\_RNA, lnc\_RNA, mRNA, pseudogene, rRNA, snoRNA, snRNA, transcript, tRNA, V\_gene\_segment.  
+	`--type` is the 3rd column of the GFF file. Option are: cDNA_match, CDS, exon, gene, guide_RNA, lnc_RNA, mRNA, pseudogene, rRNA, snoRNA, snRNA, transcript, tRNA, V_gene_segment.  
 	`--tracklabel` should be informative
-	`--nameAttributes` are the list of attributes to be saved for each feature. This is important if you want to be able to search by gene name, for example. Default: `"name, alias,id"`
 
 3. **generate-names.pl**: builds a global index of feature names.
 	
-	```
-	generate-names.pl --out ./Dhydei
-	```
-	Obs: `--out` is the directory to be processed. 
+```
+generate-names.pl --out ./Dhydei
+```
+Obs: `--out` is the directory to be processed. 
 
 4. **Zip your results**
 	
@@ -797,18 +813,18 @@ To visualize the results, you need to install JBrowse locally on your laptop. To
 
 - **From GitHub**
 	
-	```
-	git clone https://github.com/GMOD/jbrowse
-	cd jbrowse
-	./setup.sh
-	```
+```
+git clone https://github.com/GMOD/jbrowse
+cd jbrowse
+./setup.sh
+```
 
 - **From the JBrowse blog**: visit [http://jbrowse.org/blog](http://jbrowse.org/blog) and download one of the available zip files. Extract it and rename the folder to `jbrowse` to simplify things. The run the following command:
 
-	```
-	cd jbrowse
-	./setup.sh
-	```
+```
+cd jbrowse
+./setup.sh
+```
 	
 After that, you need to start jbrowse by running the command `npm run start`. This will start a local jbrowse instance, and the address to access it is listed on your terminal:
 
@@ -825,9 +841,9 @@ In my case, I opened a web browser (Chrome) and pasted `http://localhost:8082` o
 - **To visualize your data**
 	- Copy the zipped file from Hydra to your machine using `scp` or Filezilla.  
 
-		`scp username@hydra-login01.si.edu:/pool/genomics/username/GAworkshop/jbrowse/file.tar.gz ./Desktop/jbrowse`
+		`scp username@hydra-login01.si.edu:/pool/genomics/username/GAworkshop/jbrowse/Dhydei.tar.gz ./Desktop/jbrowse`
 	- Extract the file  
-		`tar -zxf file.tar.gz`
+		`tar -zxf Dhydei.tar.gz`
 	- Add the folder name to the address bar. In my case, this is the address to display my JBrowse files: 
 		`http://localhost:8082/index.html?data=Dhydei`
 		
