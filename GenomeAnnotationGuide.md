@@ -16,7 +16,7 @@
  * [9. Edit the extrinsic file to add only the evidence you have](#9-Edit-the-extrinsic-file-to-add-only-the-evidence-you-have)
  * [10. Run AUGUSTUS](#10-Run-AUGUSTUS)
  	* [10a. A brief introduction to LOOPS](#10a-A-brief-introduction-to-LOOPS)
- * [11. Create a genome browser with JBrowse](#12-Create-a-genome-browser-with-JBrowse)
+ * [11. Create a genome browser with JBrowse](#11-Create-a-genome-browser-with-JBrowse)
 
 <!-- /TOC -->
 
@@ -591,19 +591,19 @@ AUGUSTUS will run serially, one scaffold at a time. In order to speed up the pro
 
 
 <details><summary>Masked Assembly</summary>
-	<p>
-	
-	---
-	**Copy the masked assembly:**  
-	```
-	cp /data/genomics/workshops/GAworkshop/repeatmasker/Dhydei_genome.fa.masked
-	```
-	
-	---
-	
-	
-	</p>
-	</details>
+<p>
+
+---
+**Copy the masked assembly:**  
+```
+cp /data/genomics/workshops/GAworkshop/repeatmasker/Dhydei_genome.fa.masked
+```
+
+---
+
+
+</p>
+</details>
 
 **Partition the assembly into scaffolds** 
 
@@ -698,20 +698,20 @@ Now, let's create our augustus job file.
 - Commands:
 	
 ```
-	export AUGUSTUS_CONFIG_PATH="/pool/genomics/username/GAworkshop/augustus/config"
-	#
-	augustus --strand=both --singlestrand=true \
-	--hintsfile=${1}/Dhydei_hints_RM_E.gff3 \
-	--extrinsicCfgFile=extrinsic.M.RM.E.cfg \
-	--alternatives-from-evidence=true \
-	--gff3=on \
-	--uniqueGeneId=true \
-	--softmasking=1 \
-	--species=BUSCO_Dhydei_2188842729 \
-	${1}/Dhydei_genome.fa.masked > ../output/Dhydei_augustus_${1}.gff
-	#
-	echo = `date` job $JOB_NAME done
-	#
+export AUGUSTUS_CONFIG_PATH="/pool/genomics/username/GAworkshop/augustus/config"
+#
+augustus --strand=both --singlestrand=true \
+--hintsfile=${1}/Dhydei_hints_RM_E.gff3 \
+--extrinsicCfgFile=extrinsic.M.RM.E.cfg \
+--alternatives-from-evidence=true \
+--gff3=on \
+--uniqueGeneId=true \
+--softmasking=1 \
+--species=BUSCO_Dhydei_2188842729 \
+${1}/Dhydei_genome.fa.masked > ../output/Dhydei_augustus_${1}.gff
+#
+echo = `date` job $JOB_NAME done
+#
 ```
 
 Before we submit the job, let's exit from the interactive queue back to the login node by typing `exit`
@@ -791,10 +791,10 @@ flatfile-to-json.pl --gff ../augustus/output/Dhydei_augustus_final.gff3 \
 
 ```
 
-	Observations:  
-	`--gff` can't be gzipped, and must be GFF3. In addition, this script will accept `--bed` and `--gbk` (genbank) files as input.  
-	`--type` is the 3rd column of the GFF file. Option are: cDNA_match, CDS, exon, gene, guide_RNA, lnc_RNA, mRNA, pseudogene, rRNA, snoRNA, snRNA, transcript, tRNA, V_gene_segment.  
-	`--tracklabel` should be informative
+Observations:  
+`--gff` can't be gzipped, and must be GFF3. In addition, this script will accept `--bed` and `--gbk` (genbank) files as input.  
+`--type` is the 3rd column of the GFF file. Option are: cDNA_match, CDS, exon, gene, guide_RNA, lnc_RNA, mRNA, pseudogene, rRNA, snoRNA, snRNA, transcript, tRNA, V_gene_segment.  
+`--tracklabel` should be informative
 
 3. **generate-names.pl**: builds a global index of feature names.
 	
@@ -804,10 +804,10 @@ generate-names.pl --out ./Dhydei
 Obs: `--out` is the directory to be processed. 
 
 4. **Zip your results**
-	
-	```
-	tar -zcf Dhydei.tar.gz ./Dhydei
-	```	
+
+```
+tar -zcf Dhydei.tar.gz ./Dhydei
+```	
 
 To visualize the results, you need to install JBrowse locally on your laptop. To make things easier, save the JBrowse folder on your Desktop. The simplified steps are listed below; you might need to install extra dependencies. 
 
