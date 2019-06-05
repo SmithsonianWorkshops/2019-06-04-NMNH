@@ -14,7 +14,7 @@
 	* [Creating hint files from BLAT](#Creating-hint-files-from-BLAT)
 	* [Merging hints files](#Merging-hints-files)
  * [9. Edit the extrinsic file to add only the evidence you have](#9-Edit-the-extrinsic-file-to-add-only-the-evidence-you-have)
- * [10. Run AUGUSTUS](#10-Run-AUGUSTUS)
+ * [10. AUGUSTUS](#10-AUGUSTUS)
  	* [10a. A brief introduction to LOOPS](#10a-A-brief-introduction-to-LOOPS)
  * [11. Create a genome browser with JBrowse](#11-Create-a-genome-browser-with-JBrowse)
 
