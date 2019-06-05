@@ -1,7 +1,7 @@
 # Running Blast and Blast2GO
 After running AUGUSTUS
 
-###Steps:
+### Steps:
 1. Convert Augustus GFF to GFF3
 2. Extract CDS annotations
 3. Get fasta from GFF3
@@ -12,9 +12,9 @@ After running AUGUSTUS
 8. Processing Blast2GO output (optional)
 
 
-###Before starting:
+### Before starting:
 
-#####Folder structure:
+##### Folder structure:
 
 	BLAST
 		|_ blast2go		b2go results 
@@ -28,7 +28,7 @@ After running AUGUSTUS
 
 
 
-###1. Convert AUGUSTUS GFF TO GFF3
+### 1. Convert AUGUSTUS GFF TO GFF3
 
 (This is the last step in the Genome Annotation Guide. If you have already done it, just skip to Step 2.)
 
@@ -39,14 +39,14 @@ Here we will use an EVM script to convert from AUGUSTUS GFF to a linear GFF# (wi
 
 *Save/copy the output in the blast/input_files folder*
 
-###2. Extract CDS annotations
+### 2. Extract CDS annotations
 
 
 	grep "CDS" augustus_final.gff3 > augustus_CDS.gff3
 
 *Save the output to the folder blast/input_files*
 
-###3. Get fasta from GFF3
+### 3. Get fasta from GFF3
 This step can be submitted as a job or ran it from the interactive queue. 
 
 
@@ -78,7 +78,7 @@ This step can be submitted as a job or ran it from the interactive queue.
 - I prefer to create a symlink of the assembly in this folder.
 
 
-###4. Split fasta into sub-files with 100 sequences
+### 4. Split fasta into sub-files with 100 sequences
 To make BLAST more efficient, we will split the fasta file generated in the previous step (augustus_CDS.fasta) into 100 sequences. We can split into less than that (let's say, 25 or 50 sequences).
 
 	awk 'BEGIN {n_seq=0;} /^>/ \
@@ -132,14 +132,14 @@ done
 
 This script will create multiple blast jobs with tasks. In this case, I ended up with 386 jobs (remember that each file was 100 sequences, so each task has 100 sequences, and each job will cover 1000 sequences). You can adjust the numbers to anything that makes sense to your dataset.
 
-###6. Merge the xml files
+### 6. Merge the xml files
 
 After all the jobs are done, you need to merge all xml files into one single file. You can use cat for that:
 From the xml folder, do:
 
 	cat $(find . -name "*.xml" | sort -V) > ../results/all.xml
 	
-###7. Running Blast2GO
+### 7. Running Blast2GO
 
 **Before submitting the job:** from the folder blast2go, you need to load the blast2go module and run the command hydracliprop:
 
@@ -208,7 +208,7 @@ Explanation:
 More information about running Blast2GO on Hydra from the [Wiki](https://confluence.si.edu/display/HPC/Running+BLAST2GO+on+Hydra)
 
 
-###8. Processing Blast2GO output (optional)
+### 8. Processing Blast2GO output (optional)
 I wrote a script that takes the Blast2GO results and outputs (to the screen) the following info:
 
 - Number of annotated scaffolds
