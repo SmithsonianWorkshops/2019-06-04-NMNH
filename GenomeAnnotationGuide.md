@@ -635,7 +635,8 @@ Now `cd` to `scaffolds` and run the following command from it:
 ```
 module load bioinformatics/bioperl
 
-perl ../EVidenceModeler-1.1.1/EvmUtils/partition_EVM_inputs.pl --genome ../../repeatmasker/Dhydei_genome.fa.softmasked \
+perl ../EVidenceModeler-1.1.1/EvmUtils/partition_EVM_inputs.pl \
+     --genome ../../repeatmasker/Dhydei_genome.fa.softmasked \
      --gene_predictions ../hints/Dhydei_hints_RM_E.gff3 \
      --segmentSize 1000000 --overlapSize 300000 \
      --partition_listing partitions_list.out
