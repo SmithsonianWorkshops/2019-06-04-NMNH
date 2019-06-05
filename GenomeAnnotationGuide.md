@@ -576,7 +576,7 @@ nonexonpart      1          1  M    1  1e+100  RM  1     1.15 E 1    1
 
 ## DAY 2
 
-### 10.AUGUSTUS
+### 10. AUGUSTUS
 
 
 For the AUGUSTUS job, we need the following input files:
