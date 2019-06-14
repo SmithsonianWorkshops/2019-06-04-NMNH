@@ -4,7 +4,7 @@
  * [1. Quick Unix tutorial](#1-quick-unix-tutorial)  
  * [2. Folder structure](#2-folder-structure)
  * [3. Get the assembly stats with assembly-stats](#3-Get-the-assembly-stats-with-assembly-stats)
- * [4. Filter out small scaffolds](#4-Filter-out-small-scaffolds)
+ * [4. Filter out small scaffolds](#4-Filter-out-small-scaffolds-(optional))
  * [5. Run BUSCO using the --long flag](#5-Run-BUSCO-using-the---long-flag)
  	* [5a. Using BUSCO output for the AUGUSTUS run](#5a-Using-BUSCO-output-for-the-AUGUSTUS-run)
  * [6. Run RepeatMasker](#5-Run-RepeatMasker)
